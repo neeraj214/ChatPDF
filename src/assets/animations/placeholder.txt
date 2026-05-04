@@ -1,0 +1,2 @@
+This directory is for Lottie animation JSON files.
+Example: chat-animation.json, uploading-animation.json, thinking-animation.json
