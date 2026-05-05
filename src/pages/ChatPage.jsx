@@ -41,18 +41,25 @@ const ChatPage = () => {
       return;
     }
 
+    const savedHistory = localStorage.getItem(`chat_history_${fileId}`);
+    
     const loadInitialData = async () => {
       setIsLoading(true);
       setError(null);
       try {
         const info = await fetchDocumentInfo(fileId);
         setDocInfo(info);
-        setMessages([
-          { id: Date.now(), text: info.initialMessage, isUser: false, timestamp: Date.now() },
-        ]);
+        
+        if (savedHistory) {
+          setMessages(JSON.parse(savedHistory));
+        } else {
+          setMessages([
+            { id: Date.now(), text: info.initialMessage, isUser: false, timestamp: Date.now() },
+          ]);
+        }
       } catch (err) {
         setError(err.message || 'Failed to load document information.');
-        setMessages([]); // Clear messages on error
+        setMessages([]);
       } finally {
         setIsLoading(false);
       }
@@ -62,8 +69,11 @@ const ChatPage = () => {
   }, [fileId, navigate]);
 
   useEffect(() => {
+    if (fileId && messages.length > 0) {
+      localStorage.setItem(`chat_history_${fileId}`, JSON.stringify(messages));
+    }
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+  }, [messages, fileId]);
 
   const handleSendMessage = async (messageText) => {
     if (!messageText.trim() || isSending) return;
@@ -80,10 +90,11 @@ const ChatPage = () => {
     try {
       const response = await askQuestion(fileId, messageText);
       const botMessage = {
-        id: Date.now() + 1, // Ensure unique ID
+        id: Date.now() + 1,
         text: response.answer || response.text || 'I processed your question.',
         isUser: false,
         timestamp: Date.now(),
+        citations: response.citations || [], // Support for source citations
       };
       setMessages((prevMessages) => [...prevMessages, botMessage]);
     } catch (err) {
