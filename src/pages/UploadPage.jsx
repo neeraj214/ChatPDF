@@ -9,33 +9,10 @@ import Dropzone from '../components/uploader/Dropzone';
 import FilePreview from '../components/uploader/FilePreview';
 import ProgressBar from '../components/uploader/ProgressBar';
 
+import { uploadPdf } from '../services/api';
+
 import uploadAnimation from '../assets/animations/upload-animation.json'; // Changed from processing-animation.json
 import successAnimation from '../assets/animations/success-animation.json';
-
-// Placeholder for API service with progress simulation
-const uploadPdfApi = (file, onUploadProgress) => {
-  return new Promise((resolve, reject) => {
-    if (file.type !== 'application/pdf') {
-      reject({ success: false, message: 'Invalid file type. Please upload a PDF.' });
-      return;
-    }
-
-    let progress = 0;
-    const interval = setInterval(() => {
-      progress += 10;
-      if (progress <= 100) {
-        onUploadProgress(progress);
-      }
-      if (progress >= 100) {
-        clearInterval(interval);
-        setTimeout(() => {
-          console.log('Uploaded file:', file.name);
-          resolve({ success: true, message: 'PDF uploaded successfully!', fileId: 'mock-file-id-' + Date.now() });
-        }, 500); // Simulate final processing
-      }
-    }, 200); // Simulate progress update every 200ms
-  });
-};
 
 const UploadPage = () => {
   const [uploading, setUploading] = useState(false);
@@ -43,6 +20,7 @@ const UploadPage = () => {
   const [uploadedFile, setUploadedFile] = useState(null); // Stores the File object
   const [uploadError, setUploadError] = useState(null);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [fileId, setFileId] = useState(null);
   const navigate = useNavigate();
 
   const resetState = () => {
@@ -51,6 +29,7 @@ const UploadPage = () => {
     setUploadedFile(null);
     setUploadError(null);
     setShowSuccess(false);
+    setFileId(null);
   };
 
   const onDrop = useCallback(async (acceptedFiles) => {
@@ -61,26 +40,18 @@ const UploadPage = () => {
       setUploading(true);
       
       try {
-        const response = await uploadPdfApi(file, (progress) => {
-          setUploadProgress(progress);
-        });
+        const response = await uploadPdf(file);
 
-        if (response.success) {
+        // Since axios doesn't easily provide progress without config, we'll keep the response handling
+        if (response) {
           toast.success(response.message || 'PDF uploaded successfully!');
+          setFileId(response.fileId);
           setShowSuccess(true);
-          // Keep file info for navigation, but clear progress related states after a delay
-          setTimeout(() => {
-            setUploading(false); // Allows navigation button to appear
-          }, 500); // Short delay after success animation might play
-          // Actual navigation will happen on button click
-        } else {
-          setUploadError(response.message || 'PDF upload failed.');
-          toast.error(response.message || 'PDF upload failed.');
           setUploading(false);
         }
       } catch (error) {
         console.error('Upload error:', error);
-        const message = error.response?.data?.message || error.message || 'An error occurred during upload.';
+        const message = error.message || 'An error occurred during upload.';
         setUploadError(message);
         toast.error(message);
         setUploading(false);
@@ -93,11 +64,7 @@ const UploadPage = () => {
   };
 
   const handleNavigateToChat = () => {
-    if (uploadedFile && !uploading && showSuccess) {
-      // Assuming the fileId is part of the uploadedFile object or response
-      // For this example, we'll use the mock fileId from the API response
-      // This part needs to be robust in a real app, ensuring fileId is available
-      const fileId = uploadedFile.fileId || `mock-file-id-${uploadedFile.name}`;
+    if (fileId && !uploading && showSuccess) {
       navigate(`/chat?fileId=${fileId}`);
     }
   };
