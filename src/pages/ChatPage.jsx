@@ -7,37 +7,17 @@ import Lottie from 'lottie-react';
 import ChatMessage from '../components/chat/ChatMessage';
 import ChatInput from '../components/chat/ChatInput';
 import TypingIndicator from '../components/chat/TypingIndicator';
+import { askQuestion } from '../services/api';
 import thinkingAnimation from '../assets/animations/chat-thinking.json'; // Using existing animation
 
-// Mock API for fetching initial document info and sending messages
-const mockApi = {
-  fetchDocumentInfo: async (fileId) => {
-    console.log(`Fetching info for fileId: ${fileId}`);
-    await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
-    if (!fileId || fileId.startsWith('error')) {
-      return Promise.reject({ message: 'Document not found or invalid ID.' });
-    }
-    return Promise.resolve({
-      fileName: fileId.replace('mock-file-id-', '') || 'Uploaded Document.pdf',
-      initialMessage: `Hello! I'm ready to answer questions about ${fileId.replace('mock-file-id-', '') || 'your document'}. How can I help you?`,
-    });
-  },
-  sendMessageToBot: async (message, fileId) => {
-    console.log(`Sending message about ${fileId}: ${message}`);
-    await new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 1000)); // Simulate bot thinking time
-    // Simple echo bot for now, or more complex logic
-    let botResponse = `I received your message: "${message}". `; 
-    if (message.toLowerCase().includes('hello') || message.toLowerCase().includes('hi')) {
-      botResponse += "Hi there! How can I assist you further today?";
-    } else if (message.toLowerCase().includes('how are you')) {
-      botResponse += "I'm doing great, thanks for asking! Ready to help with your PDF.";
-    } else if (message.toLowerCase().includes('help')) {
-      botResponse += "Sure, I can help. Ask me anything about the document!";
-    } else {
-      botResponse += "I'm still learning, but I'll do my best to answer.";
-    }
-    return Promise.resolve({ text: botResponse });
-  },
+// Helper for initial document info (since api.js doesn't have it yet)
+const fetchDocumentInfo = async (fileId) => {
+  console.log(`Fetching info for fileId: ${fileId}`);
+  await new Promise(resolve => setTimeout(resolve, 500));
+  return {
+    fileName: fileId.replace('mock-file-id-', '') || 'Uploaded Document.pdf',
+    initialMessage: `Hello! I'm ready to answer questions about ${fileId.replace('mock-file-id-', '') || 'your document'}. How can I help you?`,
+  };
 };
 
 const ChatPage = () => {
@@ -65,7 +45,7 @@ const ChatPage = () => {
       setIsLoading(true);
       setError(null);
       try {
-        const info = await mockApi.fetchDocumentInfo(fileId);
+        const info = await fetchDocumentInfo(fileId);
         setDocInfo(info);
         setMessages([
           { id: Date.now(), text: info.initialMessage, isUser: false, timestamp: Date.now() },
@@ -98,10 +78,10 @@ const ChatPage = () => {
     setIsSending(true);
 
     try {
-      const response = await mockApi.sendMessageToBot(messageText, fileId);
+      const response = await askQuestion(fileId, messageText);
       const botMessage = {
         id: Date.now() + 1, // Ensure unique ID
-        text: response.text,
+        text: response.answer || response.text || 'I processed your question.',
         isUser: false,
         timestamp: Date.now(),
       };
@@ -110,10 +90,10 @@ const ChatPage = () => {
       console.error('Error sending message:', err);
       const errorMessage = {
         id: Date.now() + 1,
-        text: 'Sorry, I encountered an error. Please try again.',
+        text: 'Sorry, I encountered an error connecting to the AI. Please try again.',
         isUser: false,
         timestamp: Date.now(),
-        isError: true, // You can use this to style error messages differently
+        isError: true,
       };
       setMessages((prevMessages) => [...prevMessages, errorMessage]);
     } finally {
@@ -126,14 +106,9 @@ const ChatPage = () => {
         navigate('/upload');
         return;
     }
-    // Effectively re-triggers the initial data load
-    // A more robust way might involve a dedicated function or state update
-    // For simplicity, navigating to the same URL with a cache-busting param or just re-setting loading state
     setIsLoading(true);
     setError(null);
-    // Re-call the effect logic by changing a dependency or re-navigating (less ideal)
-    // This is a simplified retry, a real app might have a more direct fetch function call here.
-    mockApi.fetchDocumentInfo(fileId)
+    fetchDocumentInfo(fileId)
       .then(info => {
         setDocInfo(info);
         setMessages([
