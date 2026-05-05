@@ -40,9 +40,11 @@ const UploadPage = () => {
       setUploading(true);
       
       try {
-        const response = await uploadPdf(file);
+        const response = await uploadPdf(file, (progress) => {
+          setUploadProgress(progress);
+        });
 
-        // Since axios doesn't easily provide progress without config, we'll keep the response handling
+        // The response handling remains similar
         if (response) {
           toast.success(response.message || 'PDF uploaded successfully!');
           setFileId(response.fileId);

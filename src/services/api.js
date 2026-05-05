@@ -12,9 +12,10 @@ const apiClient = axios.create({
 /**
  * Uploads a PDF file.
  * @param {File} file - The PDF file to upload.
+ * @param {Function} onProgress - Callback for upload progress (0-100).
  * @returns {Promise<object>} The API response.
  */
-export const uploadPdf = async (file) => {
+export const uploadPdf = async (file, onProgress) => {
   const formData = new FormData();
   formData.append('pdf', file);
 
@@ -22,6 +23,12 @@ export const uploadPdf = async (file) => {
     const response = await apiClient.post('/upload', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
+      },
+      onUploadProgress: (progressEvent) => {
+        if (onProgress && progressEvent.total) {
+          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          onProgress(percentCompleted);
+        }
       },
     });
     return response.data;
