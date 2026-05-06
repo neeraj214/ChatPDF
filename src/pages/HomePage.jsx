@@ -159,7 +159,17 @@ const HomePage = () => {
             </div>
             <div className="flex items-center justify-center lg:justify-end relative">
               {/* Existing Lottie Animation */}
-              <div className="relative w-full max-w-lg p-4 bg-white/5 rounded-2xl backdrop-blur-sm shadow-xl">
+              <motion.div 
+                className="relative w-full max-w-lg p-4 bg-white/5 rounded-2xl backdrop-blur-sm shadow-xl"
+                animate={{
+                  y: [0, -10, 0],
+                }}
+                transition={{
+                  duration: 6,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              >
                 <div className="absolute -inset-0.5 bg-gradient-to-br from-indigo-500/30 via-purple-500/30 to-pink-500/30 rounded-2xl blur opacity-30"></div>
                 <Lottie
                   animationData={aiChatAnimation}
@@ -173,7 +183,7 @@ const HomePage = () => {
                     margin: '0 auto',
                   }}
                 />
-              </div>
+              </motion.div>
 
               {/* New Floating Lottie Animation */}
               <motion.div
