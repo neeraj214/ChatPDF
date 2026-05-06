@@ -1,3 +1,4 @@
+console.log('Starting server...');
 const express = require('express');
 const multer = require('multer');
 const cors = require('cors');
@@ -6,11 +7,14 @@ const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
 
+console.log('Dependencies loaded');
 const app = express();
 const port = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
+
+console.log('Middleware configured');
 
 // Ensure uploads directory exists
 const uploadDir = path.join(__dirname, 'uploads');
