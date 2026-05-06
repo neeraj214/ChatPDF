@@ -33,8 +33,14 @@ export const uploadPdf = async (file, onProgress) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Error uploading PDF:', error.response || error.message);
-    throw error.response?.data || { message: 'Failed to upload PDF' };
+    const errorData = error.response?.data;
+    const errorMessage = errorData?.message || error.message || 'Failed to upload PDF';
+    console.error('Error uploading PDF:', {
+      message: errorMessage,
+      status: error.response?.status,
+      data: errorData
+    });
+    throw { message: errorMessage };
   }
 };
 
