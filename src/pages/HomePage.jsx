@@ -116,13 +116,12 @@ const HomePage = () => {
               position: 'absolute',
               top: '0',
               left: '0',
-              opacity: 0.3,
-              mixBlendMode: 'multiply'
+              opacity: 0.4,
             }}
           />
         </div>
 
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-600/60 via-purple-600/60 to-pink-500/60 dark:from-indigo-800/60 dark:via-purple-800/60 dark:to-pink-700/60 z-1"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-600/40 via-purple-600/40 to-pink-500/40 dark:from-indigo-800/40 dark:via-purple-800/40 dark:to-pink-700/40 z-1"></div>
         
         {/* Decorative background elements */}
         <div className="absolute inset-0 z-2">
@@ -160,16 +159,18 @@ const HomePage = () => {
             </div>
             <div className="flex items-center justify-center lg:justify-end relative">
               {/* Existing Lottie Animation */}
-              <div className="relative w-full max-w-lg p-4 bg-gradient-to-br from-indigo-500/10 via-purple-500/10 to-pink-500/10 rounded-2xl backdrop-blur-sm">
-                <div className="absolute -inset-0.5 bg-gradient-to-br from-indigo-500/50 via-purple-500/50 to-pink-500/50 rounded-2xl blur opacity-30"></div>
+              <div className="relative w-full max-w-lg p-4 bg-white/5 rounded-2xl backdrop-blur-sm shadow-xl">
+                <div className="absolute -inset-0.5 bg-gradient-to-br from-indigo-500/30 via-purple-500/30 to-pink-500/30 rounded-2xl blur opacity-30"></div>
                 <Lottie
-                  animationData={aiChatAnimation} // Use local animation data
+                  animationData={aiChatAnimation}
                   loop={true}
                   autoplay={true}
                   style={{
-                    width: '300px', 
-                    height: '300px', 
-                    margin: '0 auto', 
+                    width: '100%',
+                    maxWidth: '400px',
+                    height: 'auto',
+                    minHeight: '300px',
+                    margin: '0 auto',
                   }}
                 />
               </div>
