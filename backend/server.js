@@ -48,29 +48,36 @@ const fileDatabase = {};
 
 // Routes
 app.post('/api/upload', upload.single('pdf'), async (req, res) => {
+  console.log('Upload request received');
   if (!req.file) {
+    console.error('No file in request');
     return res.status(400).json({ message: 'No file uploaded' });
   }
 
+  console.log('File received:', req.file.originalname, 'size:', req.file.size);
+
   try {
     const dataBuffer = fs.readFileSync(req.file.path);
+    console.log('File read from disk successfully');
     let text = '';
     
     try {
       const data = await pdf(dataBuffer);
       text = data.text;
+      console.log('PDF parsed successfully, text length:', text.length);
     } catch (pdfError) {
-      console.warn('pdf-parse failed, using empty text fallback:', pdfError.message);
-      // Fallback: file is uploaded but text extraction failed
+      console.warn('pdf-parse failed:', pdfError.message);
+      text = 'Text extraction failed for this document.';
     }
     
     const fileId = req.file.filename;
     fileDatabase[fileId] = {
       path: req.file.path,
-      text: text || 'Text extraction failed for this document.',
+      text: text,
       name: req.file.originalname
     };
 
+    console.log('File stored in database with ID:', fileId);
     res.json({ 
       success: true, 
       message: 'File uploaded successfully', 
@@ -78,7 +85,7 @@ app.post('/api/upload', upload.single('pdf'), async (req, res) => {
     });
   } catch (error) {
     console.error('Processing error:', error);
-    res.status(500).json({ message: `Error processing PDF: ${error.message}` });
+    res.status(500).json({ message: `Internal server error: ${error.message}` });
   }
 });
 
