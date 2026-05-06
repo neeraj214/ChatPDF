@@ -158,11 +158,11 @@ const HomePage = () => {
               </motion.div>
             </div>
             <div className="flex items-center justify-center lg:justify-end relative">
-              {/* Existing Lottie Animation */}
+              {/* Existing Lottie Animation with floating icons */}
               <motion.div 
-                className="relative w-full max-w-lg p-4 bg-white/5 rounded-2xl backdrop-blur-sm shadow-xl"
+                className="relative w-full max-w-lg p-4 bg-white/5 rounded-2xl backdrop-blur-sm shadow-xl border border-white/10"
                 animate={{
-                  y: [0, -10, 0],
+                  y: [0, -15, 0],
                 }}
                 transition={{
                   duration: 6,
@@ -171,6 +171,32 @@ const HomePage = () => {
                 }}
               >
                 <div className="absolute -inset-0.5 bg-gradient-to-br from-indigo-500/30 via-purple-500/30 to-pink-500/30 rounded-2xl blur opacity-30"></div>
+                
+                {/* Floating Decorative Icons inside the box */}
+                <motion.div 
+                  className="absolute top-4 left-4 text-blue-300/40"
+                  animate={{ y: [0, -10, 0], rotate: [0, 10, 0] }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                >
+                  <FiFileText size={24} />
+                </motion.div>
+                
+                <motion.div 
+                  className="absolute bottom-8 right-6 text-purple-300/40"
+                  animate={{ y: [0, 10, 0], rotate: [0, -15, 0] }}
+                  transition={{ duration: 4, repeat: Infinity }}
+                >
+                  <FiCpu size={28} />
+                </motion.div>
+
+                <motion.div 
+                  className="absolute top-1/2 -left-4 text-pink-300/30"
+                  animate={{ x: [0, 8, 0], y: [0, -5, 0] }}
+                  transition={{ duration: 5, repeat: Infinity }}
+                >
+                  <FiZap size={20} />
+                </motion.div>
+
                 <Lottie
                   animationData={aiChatAnimation}
                   loop={true}
@@ -181,6 +207,7 @@ const HomePage = () => {
                     height: 'auto',
                     minHeight: '300px',
                     margin: '0 auto',
+                    filter: 'drop-shadow(0px 10px 20px rgba(0,0,0,0.2))'
                   }}
                 />
               </motion.div>
