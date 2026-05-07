@@ -5,11 +5,16 @@ const cors = require('cors');
 const pdf = require('pdf-parse');
 const fs = require('fs');
 const path = require('path');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 require('dotenv').config();
 
 console.log('Dependencies loaded');
 const app = express();
 const port = process.env.PORT || 5000;
+
+// Initialize Gemini AI
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || 'YOUR_API_KEY');
+const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
 app.use(cors());
 app.use(express.json());
@@ -91,7 +96,7 @@ app.post('/api/upload', upload.single('pdf'), async (req, res) => {
   }
 });
 
-app.post('/api/chat', (req, res) => {
+app.post('/api/chat', async (req, res) => {
   const { fileId, question } = req.body;
   const fileData = fileDatabase[fileId];
 
@@ -99,17 +104,46 @@ app.post('/api/chat', (req, res) => {
     return res.status(404).json({ message: 'File not found' });
   }
 
-  // Mock AI response logic with source citations
-  const answer = `Based on the document "${fileData.name}", here is what I found regarding your question "${question}": [This is a mock response from the backend AI].`;
-  const citations = [
-    { page: 1, text: "Snippet from page 1 relevant to the answer..." },
-    { page: 2, text: "Another snippet from page 2..." }
-  ];
+  try {
+    console.log(`Processing AI question for file: ${fileData.name}`);
+    
+    // Construct prompt with context from PDF
+    const prompt = `
+      You are an AI assistant helping a user understand their PDF document.
+      Document Name: ${fileData.name}
+      Document Content: 
+      ---
+      ${fileData.text.substring(0, 30000)} 
+      ---
+      User Question: ${question}
+      
+      Instructions:
+      1. Use the provided document content to answer the question.
+      2. If the answer is not in the document, say you don't know based on the document.
+      3. Keep the answer concise and helpful.
+      4. If possible, mention which part of the document you are referring to.
+    `;
 
-  res.json({ 
-    answer: answer,
-    citations: citations
-  });
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const answer = response.text();
+
+    // Mock citations for now (actual RAG would compute these)
+    const citations = [
+      { page: 1, text: "Extracted from the uploaded PDF document." }
+    ];
+
+    res.json({ 
+      answer: answer,
+      citations: citations
+    });
+  } catch (error) {
+    console.error('Gemini AI Error:', error);
+    res.status(500).json({ 
+      message: 'Error generating AI response',
+      error: error.message 
+    });
+  }
 });
 
 app.listen(port, () => {
