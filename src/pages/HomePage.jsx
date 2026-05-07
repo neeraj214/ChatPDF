@@ -158,11 +158,11 @@ const HomePage = () => {
               </motion.div>
             </div>
             <div className="flex items-center justify-center lg:justify-end relative">
-              {/* Existing Lottie Animation with floating icons */}
+              {/* Larger Hero Animation Box */}
               <motion.div 
-                className="relative w-full max-w-lg p-4 bg-white/5 rounded-2xl backdrop-blur-sm shadow-xl border border-white/10"
+                className="relative w-full max-w-xl p-8 bg-white/5 rounded-3xl backdrop-blur-md shadow-2xl border border-white/20"
                 animate={{
-                  y: [0, -15, 0],
+                  y: [0, -20, 0],
                 }}
                 transition={{
                   duration: 6,
@@ -170,39 +170,39 @@ const HomePage = () => {
                   ease: "easeInOut",
                 }}
               >
-                <div className="absolute -inset-0.5 bg-gradient-to-br from-indigo-500/30 via-purple-500/30 to-pink-500/30 rounded-2xl blur opacity-30"></div>
+                <div className="absolute -inset-1 bg-gradient-to-br from-indigo-500/40 via-purple-500/40 to-pink-500/40 rounded-3xl blur-md opacity-40"></div>
                 
-                {/* Floating Decorative Icons inside the box */}
+                {/* Larger Floating Decorative Icons */}
                 <motion.div 
-                  className="absolute top-4 left-4 text-blue-400/60"
-                  animate={{ y: [0, -15, 0], rotate: [0, 20, 0] }}
+                  className="absolute top-6 left-6 text-blue-400/80"
+                  animate={{ y: [0, -20, 0], rotate: [0, 25, 0] }}
                   transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                 >
-                  <FiFileText size={32} />
+                  <FiFileText size={48} />
                 </motion.div>
                 
                 <motion.div 
-                  className="absolute bottom-8 right-6 text-purple-400/60"
-                  animate={{ y: [0, 15, 0], rotate: [0, -25, 0] }}
+                  className="absolute bottom-10 right-10 text-purple-400/80"
+                  animate={{ y: [0, 20, 0], rotate: [0, -30, 0] }}
                   transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                 >
-                  <FiCpu size={36} />
+                  <FiCpu size={56} />
                 </motion.div>
 
                 <motion.div 
-                  className="absolute top-1/2 -left-6 text-pink-400/50"
-                  animate={{ x: [0, 12, 0], y: [0, -8, 0], scale: [1, 1.2, 1] }}
+                  className="absolute top-1/2 -left-8 text-pink-400/70"
+                  animate={{ x: [0, 15, 0], y: [0, -10, 0], scale: [1, 1.3, 1] }}
                   transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                 >
-                  <FiZap size={28} />
+                  <FiZap size={40} />
                 </motion.div>
 
                 <motion.div 
-                  className="absolute -bottom-4 left-1/4 text-indigo-400/40"
-                  animate={{ y: [0, -12, 0], x: [0, 5, 0] }}
+                  className="absolute -bottom-6 left-1/4 text-indigo-400/60"
+                  animate={{ y: [0, -15, 0], x: [0, 10, 0] }}
                   transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
                 >
-                  <FiBookOpen size={24} />
+                  <FiBookOpen size={36} />
                 </motion.div>
 
                 <Lottie
@@ -211,69 +211,14 @@ const HomePage = () => {
                   autoplay={true}
                   style={{
                     width: '100%',
-                    maxWidth: '400px',
+                    maxWidth: '500px',
                     height: 'auto',
-                    minHeight: '300px',
+                    minHeight: '400px',
                     margin: '0 auto',
-                    filter: 'drop-shadow(0px 10px 20px rgba(0,0,0,0.2))'
+                    filter: 'drop-shadow(0px 20px 40px rgba(0,0,0,0.3))'
                   }}
                 />
               </motion.div>
-
-              {/* New Floating Lottie Animation */}
-              <motion.div
-                className="absolute -bottom-10 -left-16 z-20 hidden lg:block"
-                initial={{ y: 0, opacity: 0.8 }}
-                animate={{
-                  y: [0, -15, 0],
-                  opacity: [0.8, 1, 0.8],
-                }}
-                transition={{
-                  duration: 4,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: 0.5,
-                }}
-              >
-                <Lottie
-                  animationData={uploadAnimation}
-                  loop={true}
-                  autoplay={true}
-                  style={{
-                    width: '120px',
-                    height: '120px',
-                    opacity: 0.7,
-                  }}
-                />
-              </motion.div>
-
-              {/* Second Floating Animation */}
-              <motion.div
-                className="absolute -top-10 -right-16 z-20 hidden lg:block"
-                initial={{ y: 0, opacity: 0.8 }}
-                animate={{
-                  y: [0, -20, 0],
-                  opacity: [0.8, 1, 0.8],
-                }}
-                transition={{
-                  duration: 5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: 1,
-                }}
-              >
-                <Lottie
-                  animationData={chatThinkingAnimation}
-                  loop={true}
-                  autoplay={true}
-                  style={{
-                    width: '100px',
-                    height: '100px',
-                    opacity: 0.8,
-                  }}
-                />
-              </motion.div>
-
             </div>
           </motion.div>
         </div>
