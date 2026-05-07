@@ -174,27 +174,27 @@ const HomePage = () => {
                 
                 {/* Floating Decorative Icons inside the box */}
                 <motion.div 
-                  className="absolute top-4 left-4 text-blue-300/40"
-                  animate={{ y: [0, -10, 0], rotate: [0, 10, 0] }}
-                  transition={{ duration: 3, repeat: Infinity }}
+                  className="absolute top-4 left-4 text-blue-400/60"
+                  animate={{ y: [0, -15, 0], rotate: [0, 20, 0] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                 >
-                  <FiFileText size={24} />
+                  <FiFileText size={32} />
                 </motion.div>
                 
                 <motion.div 
-                  className="absolute bottom-8 right-6 text-purple-300/40"
-                  animate={{ y: [0, 10, 0], rotate: [0, -15, 0] }}
-                  transition={{ duration: 4, repeat: Infinity }}
+                  className="absolute bottom-8 right-6 text-purple-400/60"
+                  animate={{ y: [0, 15, 0], rotate: [0, -25, 0] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                 >
-                  <FiCpu size={28} />
+                  <FiCpu size={36} />
                 </motion.div>
 
                 <motion.div 
-                  className="absolute top-1/2 -left-4 text-pink-300/30"
-                  animate={{ x: [0, 8, 0], y: [0, -5, 0] }}
-                  transition={{ duration: 5, repeat: Infinity }}
+                  className="absolute top-1/2 -left-6 text-pink-400/50"
+                  animate={{ x: [0, 12, 0], y: [0, -8, 0], scale: [1, 1.2, 1] }}
+                  transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                 >
-                  <FiZap size={20} />
+                  <FiZap size={28} />
                 </motion.div>
 
                 <Lottie
