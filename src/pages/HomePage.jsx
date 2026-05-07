@@ -197,6 +197,14 @@ const HomePage = () => {
                   <FiZap size={28} />
                 </motion.div>
 
+                <motion.div 
+                  className="absolute -bottom-4 left-1/4 text-indigo-400/40"
+                  animate={{ y: [0, -12, 0], x: [0, 5, 0] }}
+                  transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <FiBookOpen size={24} />
+                </motion.div>
+
                 <Lottie
                   animationData={aiChatAnimation}
                   loop={true}
