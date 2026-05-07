@@ -21,9 +21,7 @@ export const uploadPdf = async (file, onProgress) => {
 
   try {
     const response = await apiClient.post('/upload', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+      // Let axios set the correct Content-Type with boundary for FormData
       onUploadProgress: (progressEvent) => {
         if (onProgress && progressEvent.total) {
           const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
