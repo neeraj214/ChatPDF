@@ -4,9 +4,7 @@ const API_BASE_URL = '/api'; // Replace with your actual backend API base URL
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  // Do not set a default Content-Type to allow axios to handle it automatically
 });
 
 /**
@@ -21,7 +19,7 @@ export const uploadPdf = async (file, onProgress) => {
 
   try {
     const response = await apiClient.post('/upload', formData, {
-      // Let axios set the correct Content-Type with boundary for FormData
+      // No headers here, axios handles it for FormData
       onUploadProgress: (progressEvent) => {
         if (onProgress && progressEvent.total) {
           const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
