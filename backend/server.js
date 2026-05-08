@@ -33,6 +33,11 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Backend is running' });
 });
 
+// Root route to show server status
+app.get('/', (req, res) => {
+  res.send('<h1>ChatPDF API Server</h1><p>Status: Running</p><p>Endpoints: /api/upload, /api/chat, /api/health</p>');
+});
+
 // Ensure uploads directory exists
 const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) {
